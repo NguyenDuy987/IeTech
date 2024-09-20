@@ -1,0 +1,17 @@
+steps:
+# Build the container image
+- name: 'gcr.io/cloud-builders/docker'
+#specify the name of the image
+  args: ['build', '-t', 'gcr.io/carbide-booth-385002/cloud-run-source-deploy', '.']
+# Push the container image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/carbide-booth-385002/cloud-run-source-deploy']
+# Deploy container image to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+#specify the service name and the region
+  args: ['run', 'deploy', 'test', '--image', 'gcr.io/carbide-booth-385002/cloud-run-source-deploy', '--region', 'us-central1',         
+        "--platform", "managed",
+        "--port", "8080"]
+images:
+- gcr.io/carbide-booth-385002/cloud-run-source-deploy
